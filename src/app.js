@@ -10,6 +10,10 @@ const { notFound, errorHandler } = require('./middleware/error');
 
 const app = express();
 
+app.get('/', (req, res) => {
+  res.send('Backend API is running 🚀');
+});
+
 app.use(helmet());
 app.use(
   cors({
