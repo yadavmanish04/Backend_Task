@@ -21,6 +21,14 @@ app.use(
     credentials: true,
   })
 );
+
+
+app.use(cors({
+  origin: [
+    'projecttask-production-6c43.up.railway.app'
+  ],
+  credentials: true,
+}));
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 if (env.NODE_ENV !== 'test') app.use(morgan('dev'));
