@@ -15,12 +15,12 @@ app.get("/", (req, res) => {
 });
 
 app.use(helmet());
-app.use(
-  cors({
-    origin: env.CLIENT_URL === "*" ? true : env.CLIENT_URL,
-    credentials: true,
-  }),
-);
+// app.use(
+//   cors({
+//     origin: env.CLIENT_URL === "*" ? true : env.CLIENT_URL,
+//     credentials: true,
+//   }),
+// );
 
 app.use(
   cors({
