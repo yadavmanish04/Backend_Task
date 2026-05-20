@@ -17,13 +17,27 @@ const ensureProjectAccess = async (projectId, user) => {
 };
 
 exports.createTask = asyncHandler(async (req, res) => {
-  await ensureProjectAccess(req.body.project, req.user);
+  const project = await ensureProjectAccess(req.body.project, req.user);
+
+  if (req.body.assignedTo?.length) {
+    const ids = req.body.assignedTo.map(String);
+    ids.forEach((id) => {
+      if (!project.teamMembers.some((m) => String(m) === id)) {
+        project.teamMembers.push(id);
+      }
+    });
+    await project.save();
+  }
+
   const task = await Task.create({ ...req.body, createdBy: req.user._id });
+
   const populated = await task.populate([
     { path: 'assignedTo', select: 'name email avatar' },
     { path: 'createdBy', select: 'name email avatar' },
   ]);
+
   req.app.get('io')?.to(`project:${task.project}`).emit('task:created', populated);
+
   return ApiResponse(res, 201, 'Task created', { task: populated });
 });
 

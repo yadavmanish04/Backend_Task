@@ -113,9 +113,13 @@ exports.removeMember = asyncHandler(async (req, res) => {
 });
 
 exports.dashboardStats = asyncHandler(async (req, res) => {
-  const projectFilter = {
-    $or: [{ createdBy: req.user._id }, { teamMembers: req.user._id }],
-  };
+  const projectFilter =
+  req.user.role === 'admin'
+    ? {}
+    : {
+        $or: [{ createdBy: req.user._id }, { teamMembers: req.user._id }],
+      };
+      
   const projects = await Project.find(projectFilter).select('_id');
   const projectIds = projects.map((p) => p._id);
 
